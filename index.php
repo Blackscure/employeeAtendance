@@ -27,7 +27,7 @@
     <td><?php echo $user[3]; ?></td>
   </tr>
   <?php
-}
+
 ?>
 </tbody>
 </table>
