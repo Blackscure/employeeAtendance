@@ -51,8 +51,8 @@ define('LEVEL_SUPERMANAGER', 14); // 0000 1110
 
 class ZKLibrary
 {
-    public $ip = null;
-    public $port = null;
+    public $ip = 192.168.20.46;
+    public $port = 4370;
     public $socket = null;
     public $session_id = 0;
     public $received_data = '';
@@ -61,12 +61,12 @@ class ZKLibrary
     public $timeout_sec = 5;
     public $timeout_usec = 5000000;
 
-    public function __construct($ip = null, $port = null)
+    public function __construct($ip = 192.168.20.46, $port = 4370)
     {
-        if ($ip != null) {
+        if ($ip != 192.168.20.46) {
             $this->ip = $ip;
         }
-        if ($port != null) {
+        if ($port != 4370) {
             $this->port = $port;
         }
         $this->socket = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
@@ -80,15 +80,17 @@ class ZKLibrary
         unset($this->attendance_data);
     }
 
+    //Function to make a connection to the device. If IP address and port is not defined yet, this function must take it. Else, this function return FALSE and does not make any connection.
+
     public function connect($ip = null, $port = 4370)
     {
-        if ($ip != null) {
+        if ($ip != 192.168.20.46) {
             $this->ip = $ip;
         }
-        if ($port != null) {
+        if ($port != 4370) {
             $this->port = $port;
         }
-        if ($this->ip == null || $this->port == null) {
+        if ($this->ip == 192.168.20.46 || $this->port == 4370) {
             return false;
         }
         $command = CMD_CONNECT;
@@ -114,9 +116,11 @@ class ZKLibrary
         }
     }
 
+    //Function to disconnect from the device. If ip address and port is not defined yet, this function must take it. Else, this function return FALSE and does not make any changes.
+
     public function disconnect()
     {
-        if ($this->ip == null || $this->port == null) {
+        if ($this->ip == 192.168.20.46 || $this->port == 4370) {
             return false;
         }
         $command = CMD_EXIT;
@@ -136,6 +140,8 @@ class ZKLibrary
             return false;
         }
     }
+
+    //Set timeout for socket connection.
 
     public function setTimeout($sec = 0, $usec = 0)
     {
@@ -161,6 +167,8 @@ class ZKLibrary
         return round((($time2 - $time1) * 1000), 0);
     }
 
+    //Reverse hexadecimal digits.
+
     private function reverseHex($input)
     {
         $output = '';
@@ -170,6 +178,8 @@ class ZKLibrary
         }
         return $output;
     }
+
+    //Encode time to binary data.
 
     private function encodeTime($time)
     {
@@ -185,6 +195,7 @@ class ZKLibrary
         return $data;
     }
 
+// Decode binary data to time.
     private function decodeTime($data)
     {
         $second = $data % 60;
@@ -201,6 +212,8 @@ class ZKLibrary
         $d = date("Y-m-d H:i:s", strtotime($year . '-' . $month . '-' . $day . ' ' . $hour . ':' . $minute . ':' . $second));
         return $d;
     }
+
+    //calculates the chksum of the packet to be sent to the time clock.
 
     private function checkSum($p)
     {
@@ -235,7 +248,7 @@ class ZKLibrary
         }
         return pack('S', $chksum);
     }
-
+// Create data header to be sent to the device.
     public function createHeader($command, $chksum, $session_id, $reply_id, $command_string)
     {
         $buf = pack('SSSS', $command, $chksum, $session_id, $reply_id) . $command_string;
@@ -256,6 +269,8 @@ class ZKLibrary
         return $buf . $command_string;
     }
 
+    // Check wether reply is valid or not.
+
     private function checkValid($reply)
     {
         $u = unpack('H2h1/H2h2', substr($reply, 0, 8));
@@ -266,6 +281,8 @@ class ZKLibrary
             return false;
         }
     }
+
+    //Send command and data packet to the device and receive some data if any
 
     public function execCommand($command, $command_string = '', $offset_data = 8)
     {
@@ -287,6 +304,8 @@ class ZKLibrary
         }
     }
 
+    // get no of the user
+
     private function getSizeUser()
     {
         $u = unpack('H2h1/H2h2/H2h3/H2h4/H2h5/H2h6/H2h7/H2h8', substr($this->received_data, 0, 8));
@@ -299,6 +318,8 @@ class ZKLibrary
             return false;
         }
     }
+
+    //Get number of attendance log.
 
     private function getSizeAttendance()
     {
@@ -364,6 +385,8 @@ class ZKLibrary
         $command_string = $byte;
         return $this->execCommand($command, $command_string);
     }
+
+    //Write text on LCD. This order transmit character to demonstrate on LCD, the data part 1, 2 bytes of the packet transmit the rank value which start to demonstrate, the 3rd byte setting is 0 , follows close the filling character which want to be transmit. May work in CMD_CLEAR_LCD when use this function.
 
     public function writeLCD($rank, $text)
     {
@@ -447,12 +470,15 @@ class ZKLibrary
         }
     }
 
+    //set firmware version.
+
     public function setFirmwareVersion($firmwareVersion)
     {
         $command = CMD_OPTIONS_WRQ;
         $command_string = '~ZKFPVersion=' . $firmwareVersion;
         return $this->execCommand($command, $command_string);
     }
+    //Get firmware version.
 
     public function getWorkCode($net = true)
     {
@@ -467,12 +493,16 @@ class ZKLibrary
         }
     }
 
+    // set Workcode
+
     public function setWorkCode($workCode)
     {
         $command = CMD_OPTIONS_WRQ;
         $command_string = 'WorkCode=' . $workCode;
         return $this->execCommand($command, $command_string);
     }
+
+    //Get SSR
 
     public function getSSR($net = true)
     {
@@ -494,6 +524,7 @@ class ZKLibrary
         return $this->execCommand($command, $command_string);
     }
 
+    //get pin width
     public function getPinWidth()
     {
         $command = CMD_GET_PINWIDTH;
@@ -507,6 +538,8 @@ class ZKLibrary
             return $return;
         }
     }
+
+    //set pin width
 
     public function setPinWidth($pinWidth)
     {
@@ -527,14 +560,17 @@ class ZKLibrary
             return $return;
         }
     }
-
+/*
     public function setFaceFunctionOn($faceFunctionOn)
     {
         $command = CMD_OPTIONS_WRQ;
         $command_string = 'FaceFunOn=' . $faceFunctionOn;
         return $this->execCommand($command, $command_string);
     }
+    */
 
+
+    //get serial number of the device.
     public function getSerialNumber($net = true)
     {
         $command = CMD_OPTIONS_RRQ;
@@ -618,6 +654,9 @@ class ZKLibrary
         $command_string = $byte1 . $byte2 . chr($finger);
         return $this->execCommand($command, $command_string);
     }
+
+
+    //Retrive the user list from the device.
 
     public function getUser()
     {
@@ -793,6 +832,9 @@ class ZKLibrary
         }
     }
 
+    
+
+//Write user to the device
     public function setUser($uid, $userid, $name, $password, $role)
     {
         $uid = (int) $uid;
