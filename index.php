@@ -1,6 +1,13 @@
 
 <?php
- 
+
+require 'zklibrary.php';
+
+$zk = new ZKLibrary('192.168.20.46', 4370);
+$zk->connect();
+$zk->disableDevice();
+
+$users = $zk->getUser();
 
 ?>
 <table width="100%" border="1" cellspacing="0" cellpadding="0" style="border-collapse:collapse;">
@@ -16,7 +23,10 @@
 </thead>
 <tbody>
 <?php
- 
+$no = 0;
+foreach($users as $key => $user)
+{
+  $no++;
   ?>
   <tr>
     <td align="right"><?php echo $no; ?></td>
@@ -27,11 +37,13 @@
     <td><?php echo $user[3]; ?></td>
   </tr>
   <?php
-
+}
 ?>
 </tbody>
 </table>
 <?php
- 
+
+$zk->enableDevice();
+$zk->disconnect();
 
 ?>
