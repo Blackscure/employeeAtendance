@@ -61,6 +61,7 @@ class ZKLibrary
     public $timeout_sec = 5;
     public $timeout_usec = 5000000;
 
+    // Object constructor.
     public function __construct($ip = null, $port = null)
     {
         if ($ip != null) {
@@ -73,6 +74,8 @@ class ZKLibrary
         $this->setTimeout($this->timeout_sec, $this->timeout_usec);
     }
 
+    //Object destructor.
+
     public function __destruct()
     {
         unset($this->received_data);
@@ -80,6 +83,8 @@ class ZKLibrary
         unset($this->attendance_data);
     }
 
+
+    //Function to make a connection to the device. If IP address and port is not defined yet, this function must take it. Else, this function return FALSE and does not make any connection.
     public function connect($ip = null, $port = 4370)
     {
         if ($ip != null) {
@@ -114,6 +119,8 @@ class ZKLibrary
         }
     }
 
+    //Function to disconnect from the device. If ip address and port is not defined yet, this function must take it. Else, this function return FALSE and does not make any changes.
+
     public function disconnect()
     {
         if ($this->ip == null || $this->port == null) {
@@ -136,6 +143,8 @@ class ZKLibrary
             return false;
         }
     }
+
+    //Set timeout for socket connection.
 
     public function setTimeout($sec = 0, $usec = 0)
     {
@@ -161,6 +170,10 @@ class ZKLibrary
         return round((($time2 - $time1) * 1000), 0);
     }
 
+    
+
+//Reverse hexadecimal digits.
+
     private function reverseHex($input)
     {
         $output = '';
@@ -170,6 +183,8 @@ class ZKLibrary
         }
         return $output;
     }
+
+    //Encode time to binary data.
 
     private function encodeTime($time)
     {
@@ -184,6 +199,8 @@ class ZKLibrary
         $data = (($year % 100) * 12 * 31 + (($month - 1) * 31) + $day - 1) * (24 * 60 * 60) + ($hour * 60 + $minute) * 60 + $second;
         return $data;
     }
+
+    //Decode binary data to time.
 
     private function decodeTime($data)
     {
@@ -201,6 +218,8 @@ class ZKLibrary
         $d = date("Y-m-d H:i:s", strtotime($year . '-' . $month . '-' . $day . ' ' . $hour . ':' . $minute . ':' . $second));
         return $d;
     }
+
+    //This function calculates the chksum of the packet to be sent to the time clock.
 
     private function checkSum($p)
     {
@@ -235,6 +254,7 @@ class ZKLibrary
         }
         return pack('S', $chksum);
     }
+    //Create data header to be sent to the device.
 
     public function createHeader($command, $chksum, $session_id, $reply_id, $command_string)
     {
@@ -256,6 +276,8 @@ class ZKLibrary
         return $buf . $command_string;
     }
 
+    //Check wether reply is valid or not.
+
     private function checkValid($reply)
     {
         $u = unpack('H2h1/H2h2', substr($reply, 0, 8));
@@ -266,6 +288,8 @@ class ZKLibrary
             return false;
         }
     }
+
+    //Send command and data packet to the device and receive some data if any.
 
     public function execCommand($command, $command_string = '', $offset_data = 8)
     {
@@ -287,6 +311,8 @@ class ZKLibrary
         }
     }
 
+    //Get number of user.
+
     private function getSizeUser()
     {
         $u = unpack('H2h1/H2h2/H2h3/H2h4/H2h5/H2h6/H2h7/H2h8', substr($this->received_data, 0, 8));
@@ -299,6 +325,8 @@ class ZKLibrary
             return false;
         }
     }
+
+    //Get number of attendance log.
 
     private function getSizeAttendance()
     {
@@ -364,6 +392,8 @@ class ZKLibrary
         $command_string = $byte;
         return $this->execCommand($command, $command_string);
     }
+
+    //Write text on LCD. This order transmit character to demonstrate on LCD, the data part 1, 2 bytes of the packet transmit the rank value which start to demonstrate, the 3rd byte setting is 0 , follows close the filling character which want to be transmit. May work in CMD_CLEAR_LCD when use this function.
 
     public function writeLCD($rank, $text)
     {
@@ -474,6 +504,8 @@ class ZKLibrary
         return $this->execCommand($command, $command_string);
     }
 
+    /*
+
     public function getSSR($net = true)
     {
         $command = CMD_OPTIONS_PRQ;
@@ -486,6 +518,7 @@ class ZKLibrary
             return $return;
         }
     }
+    */
 
     public function setSSR($ssr)
     {
@@ -493,6 +526,8 @@ class ZKLibrary
         $command_string = '~SSR=' . $ssr;
         return $this->execCommand($command, $command_string);
     }
+
+    /*
 
     public function getPinWidth()
     {
@@ -507,6 +542,7 @@ class ZKLibrary
             return $return;
         }
     }
+    */
 
     public function setPinWidth($pinWidth)
     {
@@ -747,6 +783,8 @@ class ZKLibrary
         }
     }
 
+    //Get finger print data from the device.
+
     public function getUserData()
     {
         $uid = 1;
@@ -793,6 +831,8 @@ class ZKLibrary
         }
     }
 
+    //write useres to the Device
+
     public function setUser($uid, $userid, $name, $password, $role)
     {
         $uid = (int) $uid;
@@ -810,6 +850,8 @@ class ZKLibrary
         $command_string = $byte1 . $byte2 . chr($role) . str_pad($password, 8, chr(0)) . str_pad($name, 28, chr(0)) . str_pad(chr(1), 9, chr(0)) . str_pad($userid, 8, chr(0)) . str_repeat(chr(0), 16);
         return $this->execCommand($command, $command_string);
     }
+
+    //Upload finger print template to the device. The precondition to successfully upload the fingerprint template which is, the user must exist, the user, whose the fingerprint will be uploaded, must be empty.
 
     public function setUserTemplate($data)
     {
