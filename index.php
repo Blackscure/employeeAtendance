@@ -1,4 +1,3 @@
-
 <?php
 
 require 'zklibrary.php';
@@ -9,16 +8,34 @@ $zk->disableDevice();
 
 $users = $zk->getUser();
 
+
 ?>
-<table width="100%" border="1" cellspacing="0" cellpadding="0" style="border-collapse:collapse;">
+<!-- CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+
+<style>
+  #heading{
+    font-size: 49px;
+    text-align: center;
+    color: wheat;
+    text-shadow: 3px 3px 3px black;
+  }
+
+</style>
+
+
+<div id="heading">AfriQ Network Solutions</div>
+
+<table class="table table-striped table-dark"  >
 <thead>
   <tr>
-    <td width="25">No</td>
-    <td>UID</td>
-    <td>ID</td>
-    <td>Name</td>
-    <td>Role</td>
-    <td>Password</td>
+     
+    <th width="25">No</th>
+    <th scope="col">DefaultID</th>
+      <th scope="col">UserID</th>
+      <th scope="col">Name</th>
+      <th scope="col">Role</th>
+      <th scope="c">Password</th>
   </tr>
 </thead>
 <tbody>
