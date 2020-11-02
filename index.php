@@ -1,12 +1,14 @@
 <?php
 
 require 'zklibrary.php';
-
 $zk = new ZKLibrary('192.168.20.46', 4370);
 $zk->connect();
 $zk->disableDevice();
 
 $users = $zk->getUser();
+//$users = $zk ->getAttendance();
+
+
 
 
 ?>
@@ -30,12 +32,14 @@ $users = $zk->getUser();
 <thead>
   <tr>
      
-    <th width="25">No</th>
-    <th scope="col">DefaultID</th>
+ 
+    <th scope="col">No </th>
       <th scope="col">UserID</th>
       <th scope="col">Name</th>
       <th scope="col">Role</th>
-      <th scope="c">Password</th>
+      <th scope="col">Password</th>
+      <th scope="col">Time In</th>
+      
   </tr>
 </thead>
 <tbody>
@@ -46,7 +50,6 @@ foreach($users as $key => $user)
   $no++;
   ?>
   <tr>
-    <td align="right"><?php echo $no; ?></td>
     <td><?php echo $key; ?></td>
     <td><?php echo $user[0]; ?></td>
     <td><?php echo $user[1]; ?></td>
