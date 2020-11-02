@@ -504,11 +504,11 @@ class ZKLibrary
         return $this->execCommand($command, $command_string);
     }
 
-    /*
+    
 
     public function getSSR($net = true)
     {
-        $command = CMD_OPTIONS_PRQ;
+        $command = 'CMD_OPTIONS_PRQ';
         $command_string = '~SSR';
         $return = $this->execCommand($command, $command_string);
         if ($net) {
@@ -518,7 +518,7 @@ class ZKLibrary
             return $return;
         }
     }
-    */
+    
 
     public function setSSR($ssr)
     {
@@ -527,22 +527,22 @@ class ZKLibrary
         return $this->execCommand($command, $command_string);
     }
 
-    /*
+    
 
     public function getPinWidth()
     {
-        $command = CMD_GET_PINWIDTH;
-        $command = CMD_OPTIONS_PRQ;
+        $command = 'CMD_GET_PINWIDTH';
+        $command = 'CMD_OPTIONS_PRQ';
         $command_string = '~PIN2Width';
         $return = $this->execCommand($command, $command_string);
-        if ($net) {
+        if ('$net') {
             $arr = explode("=", $return, 2);
             return $arr[1];
         } else {
             return $return;
         }
     }
-    */
+    
 
     public function setPinWidth($pinWidth)
     {
@@ -691,7 +691,7 @@ class ZKLibrary
                     $u = unpack('H144', substr($user_data, 0, 72));
                     $u1 = hexdec(substr($u[1], 2, 2));
                     $u2 = hexdec(substr($u[1], 4, 2));
-                    $uid = $u1 + ($u2 * 256);                           // 2 byte
+                    $uid = $u1 + ($u2 * 256);                          // 2 byte
                     $role = hexdec(substr($u[1], 6, 2)) . ' ';          // 1 byte
                     $password = hex2bin(substr($u[1], 8, 16)) . ' ';    // 8 byte
                     $name = hex2bin(substr($u[1], 24, 74)) . ' ';       // 37 byte
