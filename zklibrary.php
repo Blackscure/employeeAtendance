@@ -678,8 +678,7 @@ class ZKLibrary
                 $this->session_id =  hexdec($u['h6'] . $u['h5']);
                 socket_recvfrom($this->socket, $received_data, 1024, 0, $this->ip, $this->port);
             }
-            //$users = array();
-            //$time = array();
+            $users = array();
             if (count($this->user_data) > 0) {
                 for ($x = 0; $x < count($this->user_data); $x++) {
                     if ($x > 0) {

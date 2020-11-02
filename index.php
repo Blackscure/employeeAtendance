@@ -55,6 +55,7 @@ foreach($users as $key => $user)
     <td><?php echo $user[1]; ?></td>
     <td><?php echo $user[2]; ?></td>
     <td><?php echo $user[3]; ?></td>
+    <td><?php echo $user[4]; ?></td>
   </tr>
   <?php
 }
