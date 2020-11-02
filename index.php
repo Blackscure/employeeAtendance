@@ -6,7 +6,7 @@ $zk->connect();
 $zk->disableDevice();
 
 $users = $zk->getUser();
-//$users = $zk ->getAttendance();
+$attendance = $zk ->getAttendance();
 
 
 

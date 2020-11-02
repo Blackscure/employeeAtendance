@@ -954,6 +954,7 @@ class ZKLibrary
         $command = CMD_ATTLOG_RRQ;
         $command_string = '';
         $chksum = 0;
+       // $name = '';
         $session_id = $this->session_id;
         $u = unpack('H2h1/H2h2/H2h3/H2h4/H2h5/H2h6/H2h7/H2h8', substr($this->received_data, 0, 8));
         $reply_id = hexdec($u['h8'] . $u['h7']);
