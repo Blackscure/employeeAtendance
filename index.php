@@ -1,16 +1,10 @@
 <?php
-
 require 'zklibrary.php';
 $zk = new ZKLibrary('192.168.20.46', 4370);
 $zk->connect();
 $zk->disableDevice();
-
 $users = $zk->getUser();
-$attendance = $zk ->getAttendance();
-
-
-
-
+//$attendance = $zk->getAttendance();
 ?>
 <!-- CSS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
@@ -24,15 +18,11 @@ $attendance = $zk ->getAttendance();
   }
 
 </style>
-
-
 <div id="heading">AfriQ Network Solutions</div>
 
 <table class="table table-striped table-dark"  >
 <thead>
   <tr>
-     
- 
     <th scope="col">No </th>
       <th scope="col">UserID</th>
       <th scope="col">Name</th>
@@ -45,7 +35,7 @@ $attendance = $zk ->getAttendance();
 <tbody>
 <?php
 $no = 0;
-foreach($users as $key => $user)
+foreach($users  as $key => $user)
 {
   $no++;
   ?>
@@ -62,6 +52,7 @@ foreach($users as $key => $user)
 ?>
 </tbody>
 </table>
+
 <?php
 
 $zk->enableDevice();

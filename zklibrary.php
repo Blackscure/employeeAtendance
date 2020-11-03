@@ -691,7 +691,7 @@ class ZKLibrary
                     $u = unpack('H144', substr($user_data, 0, 72));
                     $u1 = hexdec(substr($u[1], 2, 2));
                     $u2 = hexdec(substr($u[1], 4, 2));
-                    $uid = $u1 + ($u2 * 256);                          // 2 byte
+                    $uid = $u1 + ($u2 * 256);                           // 2 byte
                     $role = hexdec(substr($u[1], 6, 2)) . ' ';          // 1 byte
                     $password = hex2bin(substr($u[1], 8, 16)) . ' ';    // 8 byte
                     $name = hex2bin(substr($u[1], 24, 74)) . ' ';       // 37 byte
@@ -702,10 +702,11 @@ class ZKLibrary
                     $userid = $useridArr[0];                            // get user ID
                     $nameArr = explode(chr(0), $name, 3);               // explode to array
                     $name = $nameArr[0];                                // get name
+                    $timestamp = $this->decodeTime(hexdec($this->reverseHex(substr($u[1], 58, 8))));
                     if ($name == "") {
                         $name = $uid;
                     }
-                    $users[$uid] = array($userid, $name, intval($role), $password);
+                    $users[$uid] = array($userid, $name, intval($role), $password,$timestamp);
                     $user_data = substr($user_data, 72);
                 }
             }
@@ -946,7 +947,7 @@ class ZKLibrary
     public function cancelCapture()
     {
         $command = CMD_CANCELCAPTURE;
-        return $this->execCommand($command);
+        return $this->execCommand($command); 
     }
 
     public function getAttendance()
@@ -954,7 +955,6 @@ class ZKLibrary
         $command = CMD_ATTLOG_RRQ;
         $command_string = '';
         $chksum = 0;
-       // $name = '';
         $session_id = $this->session_id;
         $u = unpack('H2h1/H2h2/H2h3/H2h4/H2h5/H2h6/H2h7/H2h8', substr($this->received_data, 0, 8));
         $reply_id = hexdec($u['h8'] . $u['h7']);
