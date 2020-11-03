@@ -716,6 +716,7 @@ class ZKLibrary
         } catch (exception $e) {
             return false;
         }
+    
     }
 
     public function getUserTemplateAll($uid)
