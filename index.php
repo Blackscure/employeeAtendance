@@ -3,8 +3,8 @@ require 'zklibrary.php';
 $zk = new ZKLibrary('192.168.20.46', 4370);
 $zk->connect();
 $zk->disableDevice();
-//$users = $zk->getUser();
-$users = $zk->getAttendance();
+$users = $zk->getUser();       // calls getUser method
+//$users = $zk->getAttendance();    //calls getAttendance method
 ?>
 <!-- CSS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
@@ -23,12 +23,12 @@ $users = $zk->getAttendance();
 <table class="table table-striped table-dark">
 <thead>
   <tr>
-    <th scope="col">No </th>
-      <th scope="col">UserID</th>
+    <th scope="col">Index</th>
+      <th scope="col">User ID</th>
       <th scope="col">Name</th>
       <th scope="col">Role</th>
       <th scope="col">Password</th>
-      <th scope="col">Time In</th> 
+      <th scope="col">Time In</th>
   </tr>
 </thead>
 <tbody>
@@ -57,5 +57,4 @@ foreach($users  as $key => $user)
 
 $zk->enableDevice();
 $zk->disconnect();
-
 ?>
