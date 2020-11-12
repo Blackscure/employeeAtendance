@@ -649,7 +649,7 @@ class ZKLibrary
     public function getSelectedUser($uid, $finger)
     {
         $command = CMD_USERTEMP_RRQ;
-        $byte1 = chr((int) ($uid % 256));
+    $byte1 = chr((int) ($uid % 256));
         $byte2 = chr((int) ($uid >> 8));
         $command_string = $byte1 . $byte2 . chr($finger);
         return $this->execCommand($command, $command_string);
@@ -706,7 +706,7 @@ class ZKLibrary
                     if ($name == "") {
                         $name = $uid;
                     }
-                    $users[$uid] = array($userid, $name, intval($role), $password,$timestamp);
+                    $users[$uid] = array($userid, $name, intval($role), $password,  $timestamp);
                     $user_data = substr($user_data, 72);
                 }
             }
@@ -731,6 +731,8 @@ class ZKLibrary
         }
         return $template;
     }
+
+    // get finger print from the device
 
     public function getUserTemplate($uid, $finger)
     {
@@ -999,6 +1001,10 @@ class ZKLibrary
             return false;
         }
     }
+
+    
+
+    
 
     public function clearAttendance()
     {
