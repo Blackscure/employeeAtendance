@@ -290,7 +290,6 @@ class ZKLibrary
     }
 
     //Send command and data packet to the device and receive some data if any.
-
     public function execCommand($command, $command_string = '', $offset_data = 8)
     {
         $chksum = 0;
@@ -655,6 +654,13 @@ class ZKLibrary
         return $this->execCommand($command, $command_string);
     }
 
+
+
+
+
+
+    
+
     public function getUser()
     {
         $command = CMD_USERTEMP_RRQ;
@@ -956,7 +962,7 @@ class ZKLibrary
     public function getAttendance()
     {
         $command = CMD_ATTLOG_RRQ;
-        $command_string = '';
+        $command_string = '5';
         $chksum = 0;
         $session_id = $this->session_id;
         $u = unpack('H2h1/H2h2/H2h3/H2h4/H2h5/H2h6/H2h7/H2h8', substr($this->received_data, 0, 8));

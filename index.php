@@ -1,60 +1,95 @@
 <?php
+
 require 'zklibrary.php';
+
 $zk = new ZKLibrary('192.168.20.46', 4370);
 $zk->connect();
 $zk->disableDevice();
-$users = $zk->getUser();       // calls getUser method
-//$users = $zk->getAttendance();    //calls getAttendance method
+
+$users = $zk->getUser();
+
 ?>
-<!-- CSS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+  <table border="1" cellpadding="5" cellspacing="2" style="float: left; margin-right: 10px;">
+            <tr>
+                <th colspan="5">Data User</th>
+            </tr>
+            <tr>
+                <th>UID</th>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Role</th>
+                <th>Password</th>
+            </tr>
+            <?php
+            try {
+                
+                //$zk->setUser(1, '1', 'Admin', '', LEVEL_ADMIN);
+                $user = $zk->getUser();
+                sleep(1);
+                while(list($uid, $userdata) = each($user)):
+                    if ($userdata[2] == LEVEL_ADMIN)
+                        $role = 'ADMIN';
+                    elseif ($userdata[2] == LEVEL_USER)
+                        $role = 'USER';
+                    else
+                        $role = 'Unknown';
+                ?>
+                <tr>
+                    <td><?php echo $uid ?></td>
+                    <td><?php echo $userdata[0] ?></td>
+                    <td><?php echo $userdata[1] ?></td>
+                    <td><?php echo $role ?></td>
+                    <td><?php echo $userdata[3] ?>&nbsp;</td>
+                </tr>
+                <?php
+                endwhile;
+            } catch (Exception $e) {
+                header("HTTP/1.0 404 Not Found");
+                header('HTTP', true, 500); // 500 internal server error                
+            }
+            //$zk->clearAdmin();
+            ?>
+        </table>
 
-<style>
-  #heading{
-    font-size: 49px;
-    text-align: center;
-    color: wheat;
-    text-shadow: 3px 3px 3px black;
-  }
+        
 
-</style>
-<div id="heading">AfriQ Network Solutions</div>
 
-<table class="table table-striped table-dark">
-<thead>
-  <tr>
-    <th scope="col">Index</th>
-      <th scope="col">User ID</th>
-      <th scope="col">Name</th>
-      <th scope="col">Role</th>
-      <th scope="col">Password</th>
-      <th scope="col">Time In</th>
-  </tr>
-</thead>
-<tbody>
-<?php
-$no = 0;
-foreach($users  as $key => $user)
-{
-  $no++;
-  ?>
-  <tr>
-    <td><?php echo $key; ?></td>
-    <td><?php echo $user[0]; ?></td>
-    <td><?php echo $user[1]; ?></td>
-    <td><?php echo $user[2]; ?></td>
-    <td><?php echo $user[3]; ?></td>
-    <td><?php echo $user[4]; ?></td>
-    <td><?php echo $user[5]; ?></td>
-  </tr>
-  <?php
-}
-?>
-</tbody>
-</table>
-
+<table border="1" cellpadding="5" cellspacing="2">
+            <tr>
+                <th colspan="6">Data Attendance</th>
+            </tr>
+            <tr>
+                <th>Index</th>
+                <th>UID</th>
+                <th>ID</th>
+                <th>Status</th>
+                <th>Date</th>
+                <th>Time</th>
+            </tr>
+            <?php
+            $attendance = $zk->getAttendance();
+            sleep(1);
+            while(list($idx, $attendancedata) = each($attendance)):
+                if ( $attendancedata[2] == 14 )
+                    $status = 'Check Out';
+                else
+                    $status = 'Check In';
+            ?>
+            <tr>
+                <td><?php echo $idx ?></td>
+                <td><?php echo $attendancedata[0] ?></td>
+                <td><?php echo $attendancedata[1] ?></td>
+                <td><?php echo $status ?></td>
+                <td><?php echo date( "d-m-Y", strtotime( $attendancedata[3] ) ) ?></td>
+                <td><?php echo date( "H:i:s", strtotime( $attendancedata[3] ) ) ?></td>
+            </tr>
+            <?php
+            endwhile
+            ?>
+        </table>
 <?php
 
 $zk->enableDevice();
 $zk->disconnect();
+
 ?>
