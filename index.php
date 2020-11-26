@@ -19,6 +19,7 @@ $users = $zk->getUser();
                 <th>Name</th>
                 <th>Role</th>
                 <th>Password</th>
+                <th>time</th>
             </tr>
             <?php
             try {
@@ -50,9 +51,6 @@ $users = $zk->getUser();
             //$zk->clearAdmin();
             ?>
         </table>
-
-        
-
 
 <table border="1" cellpadding="5" cellspacing="2">
             <tr>
