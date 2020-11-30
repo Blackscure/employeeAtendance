@@ -19,7 +19,6 @@ $users = $zk->getUser();
                 <th>Name</th>
                 <th>Role</th>
                 <th>Password</th>
-                <th>time</th>
             </tr>
             <?php
             try {
@@ -29,11 +28,11 @@ $users = $zk->getUser();
                 sleep(1);
                 while(list($uid, $userdata) = each($user)):
                     if ($userdata[2] == LEVEL_ADMIN)
-                        $role = 'ADMIN';
-                    elseif ($userdata[2] == LEVEL_USER)
                         $role = 'USER';
-                    else
+                    elseif ($userdata[2] == LEVEL_USER)
                         $role = 'Unknown';
+                    else
+                        $role = 'ADMIN';
                 ?>
                 <tr>
                     <td><?php echo $uid ?></td>
@@ -51,6 +50,9 @@ $users = $zk->getUser();
             //$zk->clearAdmin();
             ?>
         </table>
+
+        
+
 
 <table border="1" cellpadding="5" cellspacing="2">
             <tr>

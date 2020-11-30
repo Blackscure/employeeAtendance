@@ -701,7 +701,8 @@ class ZKLibrary {
 	        $this->send($buf);
 	        $this->received_data = $this->recv();
 	        $udat = unpack('H' . (strlen($this->received_data) * 2), substr($this->received_data, 0));
-	        $u = unpack('H2h1/H2h2/H2h3/H2h4/H2h5/H2h6/H2h7/H2h8', substr($this->received_data, $this->start_data, 8));
+			$u = unpack('H2h1/H2h2/H2h3/H2h4/H2h5/H2h6/H2h7/H2h8', substr($this->received_data, $this->start_data, 8));
+			$timestamp = $this->decodeTime(hexdec($this->reverseHex(substr($u[1], 58, 8))));
 	        $reply_id = hexdec($u['h8'] . $u['h7']);
 	        $comando = hexdec($u['h2'] . $u['h1']);
 
@@ -714,7 +715,7 @@ class ZKLibrary {
 	        }
 
 	        if ($size > 1024) {
-	            $buf = $this->createHeader(1504, $chksum, $session_id, $reply_id, pack('LL', 0, $size));
+	            $buf = $this->createHeader(1504, $chksum, $session_id, $reply_id, $timestamp,\ pack('LL', 0, $size));
 	            $this->send($buf);
 	        }
 		}
