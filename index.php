@@ -28,11 +28,11 @@ $users = $zk->getUser();
                 sleep(1);
                 while(list($uid, $userdata) = each($user)):
                     if ($userdata[2] == LEVEL_ADMIN)
-                        $role = 'ADMIN';
-                    elseif ($userdata[2] == LEVEL_USER)
                         $role = 'USER';
-                    else
+                    elseif ($userdata[2] == LEVEL_USER)
                         $role = 'Unknown';
+                    else
+                        $role = 'ADMIN';
                 ?>
                 <tr>
                     <td><?php echo $uid ?></td>
